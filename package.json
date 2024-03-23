@@ -1,0 +1,22 @@
+{
+  "name": "auhorize",
+  "version": "1.0.0",
+  "description": "пакет авторизации",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "type": "module",
+  "author": "kiberpank",
+  "license": "ISC",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.9",
+    "express": "^4.18.3",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.2.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  }
+}
