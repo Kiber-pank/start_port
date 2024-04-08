@@ -14,21 +14,16 @@ const __dirname = path.dirname(__filename);
 // connect MongoDB
 import {} from "./connect_mongo.js";
 
+// Модели
 import usersRouter from "./userRouter.js";
 
 //------------------------------------------------------------------------------------
-// Подключаем паспорт
-
 import session from 'express-session';
-import passport from 'passport';
-import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import {} from './config_passport.js';
-
-
-//import mongoose from 'mongoose';
-//import cookieParser from 'cookie-parser';
-//import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import initialisePassport from './config_passport.js'
+initialisePassport(passport);
 
 // Проверка на аутентификацию
 const auth = function(req, res, next) {
@@ -36,7 +31,7 @@ const auth = function(req, res, next) {
       next();
   } else {
       console.log("Пользователь не аутентифицирован");
-      return res.redirect('/login_register');
+      return res.redirect('/user/login');
   }
 }
 
@@ -60,14 +55,17 @@ app
     })
   )
 
-  //Запуск файла конфигурации
   .use(passport.initialize())
   .use(passport.session())
-
   //Навигация
   .use('/user', usersRouter) // Работа с пользолвателем Логин, Регистрация, Выход
 
-  .get('/', auth, function(req, res) {
+/*   .get('/dashboard', function(req, res) {
+    console.log("Index page");
+    res.render('pages/dashboard', { message: "message" });
+  }) */
+
+  .get('/',auth, function(req, res) {
     console.log("Index page");
     res.render('pages/index', { message: "message" });
   })

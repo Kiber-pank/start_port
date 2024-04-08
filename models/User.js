@@ -1,16 +1,13 @@
 import {mongoose} from 'mongoose';
-const { crypto } = await import('node:crypto');
+import crypto from 'crypto';
 
 const UserSchema = mongoose.Schema({
     name: { type: String },
     phone: { type: Number },
     e_mail: { type: String },
-    balance: { type: Number, required: false, default: 0 },
-    timeLine: { type: Number, required: false, default: 0 },
-    datareg: { type: Date, default: Date.now },
     hash: String,
     salt: String
-});
+}, { timestamps: true });
 
 // Метод для установки соли и хэширования пароля для пользователя
 // метод setPassword сначала создает соль, уникальную для каждого пользователя
