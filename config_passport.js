@@ -26,20 +26,25 @@ export default function (passport) {
     passReqToCallback: true
   },
     async function (req, username, password, cb) {
-      console.log(username);
-      console.log(password);
       await User.findOne({ e_mail: username })
         .then(user => {
           if (!user) {
             return cb(null, false, { message: 'Неправильно введен логин или пароль' });
           } else {
-            // Проверяем пароль
-            if (user.validPassword(password)) {
-              console.log(`Пользователь ${user.id} выполнил вход`);
-              return cb(null, user);
+            if (user.login_err < 3) {
+              // Проверяем пароль
+              if (user.validPassword(password)) {
+                return cb(null, user);
+              } else {
+                user.$inc('login_err', 1);
+                user.save()
+                return cb(null, false, { message: 'Неправильно введен логин или пароль' });
+              }
             } else {
-              console.log('Неправильно введен пароль!');
-              return cb(null, false, { message: 'Неправильно введен логин или пароль' });
+              user.salt = ""
+              user.hash = ""
+              user.save()
+              return cb(null, false, { message: 'Неправильный пароль введен более 3 раз! Аккаунт заблокирован, инструкция по замене пароля выслана на почту!' });
             }
           }
         },
@@ -58,14 +63,11 @@ export default function (passport) {
     passReqToCallback: true
   },
     function (req, username, password, cb) {
-      console.log("username", username);
-      console.log("password", password);
       var findOrCreateUser = async function () {
         // поиск пользователя в Mongo с помощью предоставленного E-mail пользователя
         await User.findOne({ e_mail: username })
           .then(user => {
             if (user) {
-              console.log(`Пользователь с таким уже существует`);
               return cb(null, false, req.flash('message', `Пользователь с таким E-mail уже существует`));
             } else {
               // если пользователя с таки адресом электронной почты
@@ -81,7 +83,6 @@ export default function (passport) {
                   if (!user) {
                     return cb(null, false, { message: 'Не сохранился пользователь' });
                   } else {
-                    console.log(`Зарегистрирован пользователь`, newUser.id);
                     return cb(null, newUser);
                   }
                 },
