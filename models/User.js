@@ -7,7 +7,8 @@ const UserSchema = mongoose.Schema({
     e_mail: { type: String },
     hash: String,
     salt: String,
-    login_err: { type: Number, default: 0}
+    login_err: { type: Number, default: 0}, // счетчик неправильных попыток ввода пароля
+    e_mail_confirmation: {type: Boolean, default: false }//email confirmation подтверждена почта или нет
 }, { timestamps: true });
 
 // Метод для установки соли и хэширования пароля для пользователя

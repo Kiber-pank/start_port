@@ -1,5 +1,6 @@
 import { Strategy as LocalStrategy } from 'passport-local'
 import { User } from './models/User.js';
+import { sendMail } from './mailer.js'
 
 export default function (passport) {
   // Серриализация пользователя
@@ -83,6 +84,10 @@ export default function (passport) {
                   if (!user) {
                     return cb(null, false, { message: 'Не сохранился пользователь' });
                   } else {
+                    sendMail({
+                      type:'email_confirmation',
+                      user: newUser
+                    })
                     return cb(null, newUser);
                   }
                 },
