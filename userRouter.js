@@ -2,11 +2,12 @@ import express from 'express';
 var router = express.Router();
 import passport from 'passport';
 import { User } from './models/User.js';
+import { sendMail } from './mailer.js'
 
 router
   .post('/login', passport.authenticate('local', { failureRedirect: '/user/login' }),
     function (req, res) {
-      res.redirect('/');
+      res.redirect('/dasboard');
     })
   .get('/login', function (req, res) {
     // Всегда редирект на главную для запуска паспорта
@@ -33,22 +34,53 @@ router
     });
   })
   .get('/email_confirmation/:id/:email', async function (req, res, next) {
-    console.log(req.params)
     await User.findOne({ _id: req.params.id, e_mail: req.params.email })
       .then(user => {
-        console.log(user)
         if (!user) {
           return next(null);
         } else {
-          user.$set('e_mail_confirmation', true)
+          user.$set('e_mail_confirmation', true);
+          user.$set('login_err', 0);
           user.save();
           res.redirect('/dashboard');
         }
-
       },
         error => {
           return next(error);
         })
   })
+  .get('/resetpwd', function (req, res, next) {
+    return res.render('pages/resetpwd', { message: "message" });
+  })
+  .post('/resetpwd', async function (req, res, next) {
+    await User.findOne({ e_mail: req.body.e_mail})
+      .then(user => {
+        if (!user) {
+          return next(null);
+        } else {
+          user.setPassword(req.body.pwd);
+          user.$set('e_mail_confirmation', false);
+          user.save()
+          .then(user => {
+            if (!user) {
+              return next(null);
+            } else {
+                sendMail({
+                    type:'email_confirmation',
+                    user
+                  })
+                res.redirect('/user/login');
+            }
+          },
+            error => {
+              return next(error);
+            })
 
+        }
+      },
+        error => {
+          return next(error);
+        })
+  })
+  
 export default router;

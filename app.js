@@ -60,10 +60,10 @@ app
   //Навигация
   .use('/user', usersRouter) // Работа с пользолвателем Логин, Регистрация, Выход
 
-/*   .get('/dashboard', function(req, res) {
+  .get('/dashboard', function(req, res) {
     console.log("Index page");
     res.render('pages/dashboard', { message: "message" });
-  }) */
+  })
 
   .get('/',auth, function(req, res) {
     console.log("Index page");

@@ -45,6 +45,10 @@ export default function (passport) {
               user.salt = ""
               user.hash = ""
               user.save()
+              sendMail({
+                type:'email_blocked',
+                user
+              })
               return cb(null, false, { message: 'Неправильный пароль введен более 3 раз! Аккаунт заблокирован, инструкция по замене пароля выслана на почту!' });
             }
           }

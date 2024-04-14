@@ -6,7 +6,8 @@ export function sendMail(data) {
   let data_letter = {
     name: data.user.name,
     email_confirmation: `http://${constants.HOST}/user/email_confirmation/${data.user.id}/${data.user.e_mail}`,
-    email_unsubscribe: `http://${constants.HOST}/user/unsubscribe/${data.user.id}`
+    email_unsubscribe: `http://${constants.HOST}/user/unsubscribe/${data.user.id}`,
+    email_unblocking: `http://${constants.HOST}/user/resetpwd`
   }
   ejs.renderFile(`./mail_templates/${data.type}.ejs`, data_letter, function (err, letter) {
     if (err) {
