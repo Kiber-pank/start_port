@@ -103,7 +103,6 @@ export default function (passport) {
             error => {
               return cb(error);
             })
-
       };
       // Отложить исполнение findOrCreateUser и выполнить
       // метод на следующем этапе цикла события

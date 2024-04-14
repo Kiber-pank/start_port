@@ -7,7 +7,7 @@ import { sendMail } from './mailer.js'
 router
   .post('/login', passport.authenticate('local', { failureRedirect: '/user/login' }),
     function (req, res) {
-      res.redirect('/dasboard');
+      res.redirect('/dashboard');
     })
   .get('/login', function (req, res) {
     // Всегда редирект на главную для запуска паспорта
@@ -49,11 +49,27 @@ router
           return next(error);
         })
   })
+  .post('/email_confirmation', async function (req, res, next) {
+    await User.findOne({ e_mail: req.body.e_mail })
+      .then(user => {
+        if (!user) {
+          return next(null);
+        } else {
+          user.$set('e_mail_confirmation', true);
+          user.$set('login_err', 0);
+          user.save();
+          res.redirect('/dashboard');
+        }
+      },
+        error => {
+          return next(error);
+        })
+  })
   .get('/resetpwd', function (req, res, next) {
     return res.render('pages/resetpwd', { message: "message" });
   })
   .post('/resetpwd', async function (req, res, next) {
-    await User.findOne({ e_mail: req.body.e_mail})
+    await User.findOne({ e_mail: req.body.e_mail })
       .then(user => {
         if (!user) {
           return next(null);
@@ -61,26 +77,27 @@ router
           user.setPassword(req.body.pwd);
           user.$set('e_mail_confirmation', false);
           user.save()
-          .then(user => {
-            if (!user) {
-              return next(null);
-            } else {
+            .then(user => {
+              if (!user) {
+                return next(null);
+              } else {
                 sendMail({
-                    type:'email_confirmation',
-                    user
-                  })
+                  type: 'email_confirmation',
+                  user
+                })
                 res.redirect('/user/login');
-            }
-          },
-            error => {
-              return next(error);
-            })
-
+              }
+            },
+              error => {
+                return next(error);
+              })
         }
       },
         error => {
           return next(error);
         })
   })
-  
+.get('/email_confirmation_page', function (req, res, next) {
+  return res.render('pages/email_confirmation', { message: "message" })
+})
 export default router;
