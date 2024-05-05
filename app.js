@@ -35,14 +35,6 @@ const auth = function(req, res, next) {
   }
 }
 
-const e_mail_confirmation = function(req, res, next) {
-  if (req.user.e_mail_confirmation) {
-      next();
-  } else {
-      return res.redirect('/user/email_confirmation_page');
-  }
-}
-
 app
   .use(express.static(path.join(__dirname, 'static')))
   .set('views', path.join(__dirname, 'views'))
@@ -68,13 +60,12 @@ app
   //Навигация
   .use('/user', usersRouter) // Работа с пользолвателем Логин, Регистрация, Выход
 
-  .get('/dashboard', function(req, res) {
-    console.log("Index page");
+  .get('/dashboard', auth, function(req, res) {
     res.render('pages/dashboard', { message: "message" });
   })
 
-  .get('/',auth, function(req, res) {
-    console.log("Index page");
+  .get('/', function(req, res) {
+    console.log("Go to dashboard");
     res.render('pages/index', { message: "message" });
   })
 

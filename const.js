@@ -7,7 +7,8 @@ const constants = {
     MAIL_HOST: 'smtp.yandex.ru', 
     MAIL_PORT: 465,
     MAIL_LOGIN: 'irbis-tolik@yandex.ru',
-    MAIL_PWD: 'aqernossqykbaopf'
+    MAIL_PWD: 'aqernossqykbaopf',
+    JWT_SECRET: 'JWTSecretKey'
 }
 
 export { constants }

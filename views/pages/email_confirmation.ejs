@@ -22,7 +22,16 @@
       <div class="card-body">
         <form action="/user/resetpwd" method="post">
           <div class="mb-3">
-            <p>Вы попали на эту страницу, потому, что Ваш Email не подтвержден. Использование сервисом временно приостановлено, пожалуйста напомните Вашу почту и мы вышлем Вам ссылку для подтверждения</p>
+            <% if(err_message){ %>
+              <p style="color: red;"><%= err_message %></p>
+            <% } %>
+            <% if(e_mail){ %>
+              <p>Использование сервисом временно приостановлено, на Вашу почту <%= e_mail %> направлено письмо для подтверждения Email</p>
+              <p>Если письмо не пришло, напомните Вашу почту и мы вышлем Вам ссылку для подтверждения провторно</p>
+            <% } else{ %>
+              <p>Укажите Ваш Email, сервис направит Вам письмо для подтверждения</p>
+           <% } %>
+
             <label for="e_mail" class="form-label">Email адрес</label>
             <input type="email" class="form-control" id="e_mail" name="e_mail" aria-describedby="emailHelp">
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>

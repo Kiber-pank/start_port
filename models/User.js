@@ -4,7 +4,7 @@ import crypto from 'crypto';
 const UserSchema = mongoose.Schema({
     name: { type: String },
     phone: { type: Number },
-    e_mail: { type: String },
+    e_mail: { type: String, unique: true, index: true },
     hash: String,
     salt: String,
     login_err: { type: Number, default: 0}, // счетчик неправильных попыток ввода пароля

@@ -24,7 +24,9 @@
 
     <div class="card border-primary mb-3">
       <div class="card-body">
-
+        <% if(err_message){ %>
+          <p style="color: red;"><%= err_message %></p>
+        <% } %>
 
         <form action="/user/login" method="post">
           <div class="mb-3">
@@ -42,6 +44,7 @@
           </div> -->
           <button type="submit" class="btn btn-primary">Вход</button>
         </form>
+
         <hr>
         Autorize variant
         <hr>

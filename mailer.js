@@ -2,11 +2,22 @@ import nodemailer from 'nodemailer';
 import {constants} from './const.js';
 import ejs from 'ejs';
 
+/* 
+data = {
+  type:String,
+  user:{
+    e_mail:String,
+    name: String
+  },
+  token: String
+}
+*/
+
 export function sendMail(data) {
   let data_letter = {
-    name: data.user.name,
-    email_confirmation: `http://${constants.HOST}/user/email_confirmation/${data.user.id}/${data.user.e_mail}`,
-    email_unsubscribe: `http://${constants.HOST}/user/unsubscribe/${data.user.id}`,
+    user:data.user,
+    email_confirmation: `http://${constants.HOST}/user/email_confirmation/${data.user.e_mail}/${data.token}`,
+    email_unsubscribe: `http://${constants.HOST}/user/unsubscribe/${data.user.e_mail}`,
     email_unblocking: `http://${constants.HOST}/user/resetpwd`
   }
   ejs.renderFile(`./mail_templates/${data.type}.ejs`, data_letter, function (err, letter) {

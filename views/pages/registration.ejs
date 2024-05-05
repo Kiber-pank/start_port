@@ -28,6 +28,9 @@
 
         <form action="/user/signup" method="post">
           <div class="mb-3">
+            <% if(err_message){ %>
+              <p style="color: red;"><%= err_message %></p>
+            <% } %>
             <label for="name" class="form-label">Имя</label>
             <input type="text" class="form-control" id="name" name="name">
           </div>
